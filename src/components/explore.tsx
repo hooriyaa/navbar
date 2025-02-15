@@ -1,117 +1,97 @@
 "use client";
-import { useEffect, useState } from "react";
-import AOS from "aos";
-import "aos/dist/aos.css";
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { FaRobot, FaLightbulb, FaCogs, FaTimes } from "react-icons/fa";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X, Bot, Cpu, BarChart, DollarSign, Mail } from "lucide-react";
 
-const Explore = () => {
-  const [showPopup, setShowPopup] = useState(false);
+export default function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => {
-    AOS.init({ duration: 1000 });
-  }, []);
-
-  const handleButtonClick = () => {
-    setShowPopup(true);
-  };
+  const menuItems = [
+    { name: "Technology", icon: <Cpu size={20} className="text-purple-400" />, link: "#technology" },
+    { name: "Analysis", icon: <BarChart size={20} className="text-purple-400" />, link: "#analysis" },
+    { name: "Pricing", icon: <DollarSign size={20} className="text-purple-400" />, link: "#pricing" },
+    { name: "Contact", icon: <Mail size={20} className="text-purple-400" />, link: "#contact" },
+  ];
 
   return (
-    <div className="relative w-full py-16 bg-black text-white flex flex-col items-center justify-center px-6 overflow-hidden">
-      {/* Background Effects */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-black to-pink-900 opacity-50" />
-    {/* Moving Particles */}
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(30)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-[2px] h-[2px] sm:w-[3px] sm:h-[3px] bg-white/50 rounded-full"
-            initial={{
-              x: Math.random() * window.innerWidth,
-              y: Math.random() * window.innerHeight,
-              opacity: 0.3,
-            }}
-            animate={{
-              y: ["100vh", "-10vh"],
-              opacity: [0.2, 0.5, 0.2],
-            }}
-            transition={{
-              duration: Math.random() * 10 + 5,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-          />
-        ))}
-      </div>
-
-
-      <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-center items-center gap-3" data-aos="fade-up">
-        Explore the Future of {" "}
-        <span className="bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
-          AI
-        </span>
-      </h1>
-
-      <p className="text-lg md:text-xl text-gray-300 mt-4 text-center max-w-2xl" data-aos="fade-up" data-aos-delay="300">
-        Dive into the world of Agentic AI with cutting-edge innovations and intelligent automation.
-      </p>
-
-      {/* Feature Sections */}
-      <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl">
-        <div className="p-6 bg-white/10 backdrop-blur-lg rounded-xl shadow-lg border border-white/20 text-center" data-aos="flip-left">
-          <FaRobot className="text-4xl text-pink-500 mb-4 animate-pulse" />
-          <h3 className="text-xl font-bold">AI-Powered Agents</h3>
-          <p className="text-gray-400 mt-2">Autonomous AI systems that learn, adapt, and optimize processes in real-time.</p>
-        </div>
+    <nav className="fixed top-0 left-0 w-full bg-black/90 backdrop-blur-md shadow-lg z-50">
+      <div className="container mx-auto flex justify-between items-center px-6 py-4">
         
-        <div className="p-6 bg-white/10 backdrop-blur-lg rounded-xl shadow-lg border border-white/20 text-center" data-aos="flip-up" data-aos-delay="200">
-          <FaLightbulb className="text-4xl text-purple-400 mb-4 animate-pulse" />
-          <h3 className="text-xl font-bold">Intelligent Insights</h3>
-          <p className="text-gray-400 mt-2">Predictive analytics and machine learning models to enhance decision-making.</p>
+        {/* Logo with Animated Robot Icon */}
+        <motion.div 
+          className="text-2xl font-bold text-white flex items-center gap-2"
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <motion.div whileHover={{ rotate: 20, scale: 1.2 }} transition={{ duration: 0.3 }}>
+            <Bot size={28} className="text-purple-400" />
+          </motion.div>
+          <span className="text-purple-400">Agentia</span> World
+        </motion.div>
+
+        {/* Desktop Menu */}
+        <div className="hidden md:flex space-x-8">
+          {menuItems.map((item, index) => (
+            <motion.a 
+              key={index} 
+              href={item.link} 
+              className="text-white hover:text-purple-400 transition-all flex items-center gap-2"
+              whileHover={{ scale: 1.1 }}
+            >
+              {item.icon}
+              {item.name}
+            </motion.a>
+          ))}
         </div>
-        
-        <div className="p-6 bg-white/10 backdrop-blur-lg rounded-xl shadow-lg border border-white/20 text-center" data-aos="flip-right" data-aos-delay="400">
-          <FaCogs className="text-4xl text-blue-400 mb-4 animate-spin-slow" />
-          <h3 className="text-xl font-bold">Automation & Efficiency</h3>
-          <p className="text-gray-400 mt-2">Streamlining operations and optimizing workflows with cutting-edge AI technology.</p>
-        </div>
+
+        {/* CTA Button */}
+        <motion.a 
+          href="#discover"
+          className="hidden md:flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg shadow-md hover:shadow-xl transition-all"
+          whileHover={{ scale: 1.1 }}
+        >
+          <Bot size={22} />
+          Discover More
+        </motion.a>
+
+        {/* Mobile Menu Button */}
+        <button onClick={() => setIsOpen(!isOpen)} className="md:hidden text-white">
+          {isOpen ? <X size={28} /> : <Menu size={28} />}
+        </button>
       </div>
 
-      {/* Call to Action */}
-      <div className="mt-12 flex gap-4 flex-col sm:flex-row" data-aos="fade-up" data-aos-delay="600">
-        <Button
-          variant="default"
-          className="bg-gradient-to-r from-purple-500 to-pink-500 hover:shadow-xl hover:scale-110 transition-transform rounded-xl px-8 text-lg font-semibold tracking-wide py-5"
-          onClick={handleButtonClick}
-        >
-          Get Started
-        </Button>
-        <Button
-          variant="outline"
-          className="border-purple-500 text-purple-400 hover:bg-purple-500 hover:text-white transition rounded-xl px-8 py-5 text-lg font-semibold tracking-wide"
-          onClick={handleButtonClick}
-        >
-          📖 Learn More
-        </Button>
-      </div>
-
-      {showPopup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-md z-50">
-          <div className="bg-white text-black p-6 rounded-xl shadow-lg w-96 text-center relative" data-aos="zoom-in">
-            <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-800" onClick={() => setShowPopup(false)}>
-              <FaTimes className="text-2xl" />
-            </button>
-            <h2 className="text-2xl font-bold mb-4">🚀 Special AI Offer!</h2>
-            <p className="text-gray-700 mb-4">Unlock the power of AI with our latest tools and insights. Get started today!</p>
-            <Button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:scale-105 transition" onClick={() => setShowPopup(false)}>
-              Claim Offer
-            </Button>
-          </div>
-        </div>
-      )}
-    </div>
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div 
+            className="md:hidden bg-black/90 text-white absolute top-16 left-0 w-full flex flex-col items-center gap-4 py-6"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+          >
+            {menuItems.map((item, index) => (
+              <a 
+                key={index} 
+                href={item.link} 
+                className="text-lg flex items-center gap-2 hover:text-purple-400 transition-all"
+                onClick={() => setIsOpen(false)}
+              >
+                {item.icon}
+                {item.name}
+              </a>
+            ))}
+            <a 
+              href="#discover"
+              className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg shadow-md"
+              onClick={() => setIsOpen(false)}
+            >
+              <Bot size={22} />
+              Discover More
+            </a>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </nav>
   );
-};
-
-export default Explore;
+}
